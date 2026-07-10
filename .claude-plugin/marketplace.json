@@ -1,0 +1,22 @@
+{
+  "name": "kynth",
+  "description": "Kynth Core tools for Claude Code — financial-document extraction, PII redaction, and contract review.",
+  "owner": {
+    "name": "Isaiah Kim",
+    "email": "kyisaiah47@gmail.com",
+    "url": "https://github.com/kyisaiah47"
+  },
+  "plugins": [
+    {
+      "name": "kynth-core",
+      "source": "./",
+      "description": "Financial-document extraction, PII redaction, and contract review via the Kynth Core API — MCP tools plus skills that know how to route documents through them.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Isaiah Kim"
+      },
+      "homepage": "https://api.kynth.studio",
+      "license": "MIT"
+    }
+  ]
+}

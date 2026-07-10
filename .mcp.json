@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kynth-core": {
+      "command": "npx",
+      "args": ["-y", "@kynth/api-mcp"],
+      "env": {
+        "KYNTH_API_KEY": "${KYNTH_API_KEY}"
+      }
+    }
+  }
+}

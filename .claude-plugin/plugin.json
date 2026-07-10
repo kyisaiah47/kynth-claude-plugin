@@ -1,0 +1,16 @@
+{
+  "name": "kynth-core",
+  "displayName": "Kynth Core",
+  "version": "0.1.0",
+  "description": "Financial-document extraction (invoices, receipts, statements, tables), PII redaction, and contract review via the Kynth Core API — MCP tools plus skills that know how to route documents through them.",
+  "author": {
+    "name": "Isaiah Kim",
+    "email": "kyisaiah47@gmail.com",
+    "url": "https://github.com/kyisaiah47"
+  },
+  "homepage": "https://api.kynth.studio",
+  "repository": "https://github.com/kyisaiah47/kynth-claude-plugin",
+  "license": "MIT",
+  "keywords": ["mcp", "document-extraction", "invoice-ocr", "pii-redaction", "contract-review"],
+  "mcpServers": "./.mcp.json"
+}
