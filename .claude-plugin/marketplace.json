@@ -1,22 +1,44 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "kynth",
-  "description": "Kynth Core tools for Claude Code — financial-document extraction, PII redaction, and contract review.",
+  "description": "Plugins from Kynth Studios. ParseRail puts document parsing, field extraction, PII redaction and contract analysis in Claude Code as native tools.",
+  "version": "0.2.0",
   "owner": {
-    "name": "Isaiah Kim",
-    "email": "kyisaiah47@gmail.com",
-    "url": "https://github.com/kyisaiah47"
+    "name": "Kynth Studios",
+    "email": "hello@kynth.studio",
+    "url": "https://kynth.studio"
+  },
+  "renames": {
+    "kynth-core": "parserail"
   },
   "plugins": [
     {
-      "name": "kynth-core",
+      "name": "parserail",
+      "displayName": "ParseRail",
       "source": "./",
-      "description": "Financial-document extraction, PII redaction, and contract review via the Kynth Core API — MCP tools plus skills that know how to route documents through them.",
-      "version": "0.1.0",
+      "description": "Documents and messy text into schema-validated JSON, in Claude Code. Wires the ParseRail MCP server (41 tools) and three skills that route a document to the right endpoint, redact PII before it is stored, and answer auth, pricing and error questions.",
+      "version": "0.2.0",
       "author": {
-        "name": "Isaiah Kim"
+        "name": "Kynth Studios",
+        "email": "hello@kynth.studio",
+        "url": "https://kynth.studio"
       },
-      "homepage": "https://api.kynth.studio",
-      "license": "MIT"
+      "homepage": "https://parserail.kynth.studio",
+      "repository": "https://github.com/kyisaiah47/kynth-claude-plugin",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "mcp",
+        "document-parsing",
+        "invoice-extraction",
+        "receipt-ocr",
+        "bank-statement",
+        "pii-redaction",
+        "contract-analysis",
+        "json-schema",
+        "parserail"
+      ],
+      "tags": ["documents", "extraction", "privacy", "api"]
     }
   ]
 }

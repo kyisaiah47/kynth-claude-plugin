@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "kynth-core": {
+    "parserail": {
       "command": "npx",
       "args": ["-y", "@kynth/api-mcp"],
       "env": {

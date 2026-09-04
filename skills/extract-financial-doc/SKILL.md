@@ -1,32 +1,35 @@
 ---
 name: extract-financial-doc
-description: Extract structured data from a financial document — invoice, receipt, bank/card statement, or embedded tables — using the Kynth Core MCP tools. Use when the user wants line items, totals, transactions, or tables pulled out of a PDF, image, or pasted text as clean JSON.
+description: Extract structured data from a financial document (invoice, receipt, bank or card statement, resume, contract, or embedded tables) using the ParseRail MCP tools. Use when the user wants line items, totals, transactions, or tables pulled out of a PDF, an image, or pasted text as clean JSON.
 ---
 
 # Extract a financial document
 
-Route the document through the Kynth Core tool that matches its type. The specialized tools return richer, schema-validated JSON and cost fewer credits than generic parsing.
+Route the document through the ParseRail tool that matches its type. The specialized tools return richer, schema-validated JSON and most of them cost fewer credits than generic parsing.
 
 ## 1. Pick the tool
 
-| Document | Tool | Output |
-| --- | --- | --- |
-| Invoice | `kynth_invoice` | vendor, dates, PO refs, tax, totals, line items |
-| Receipt | `kynth_receipt` | merchant, items, totals, payment method, expense category |
-| Bank/card statement | `kynth_statement` | account, period, balances, every transaction as a normalized row |
-| Tables (any doc, even scanned) | `kynth_tables` | every table as clean headers + rows |
-| Unknown / other (EOB, ERA, COI…) | `kynth_parse` | structured fields; pass an optional `docType` hint, e.g. `"invoice"` |
-| Multi-document scan bundle | `kynth_split` | what each document is + where it starts and ends; then extract each piece |
+| Document | Tool | Output | Credits |
+| --- | --- | --- | --- |
+| Invoice | `kynth_invoice` | vendor, dates, PO refs, tax, totals, line items | 8 |
+| Receipt | `kynth_receipt` | merchant, items, totals, payment method, expense category | 6 |
+| Bank or card statement | `kynth_statement` | account, period, balances, every transaction as a normalized row | 12 |
+| Tables in any document, scanned included | `kynth_tables` | every table as clean headers and rows | 8 |
+| Resume or CV | `kynth_resume` | contact, skills, experience, education, links | 8 |
+| Contract | `kynth_contract` | parties, effective date, term, renewal, governing law, obligations, risk clauses | 12 |
+| Unknown or other (EOB, ERA, COI) | `kynth_parse` | structured fields, with an optional `docType` hint such as `"invoice"` | 10 |
+| Multi-document scan bundle | `kynth_split` | what each document is and where it starts and ends, then extract each piece | 10 |
+| Two versions of one document | `kynth_compare` | every material change, what it means, the risk it carries | 15 |
 
-If the user needs output in their own shape, run the extraction tool first, then pass the result through `kynth_structure` with their JSON Schema — it validates against required fields and property types and returns a `valid` flag.
+If the user needs the output in their own shape, run the extraction tool first, then pass the result through `kynth_structure` with their JSON Schema. It validates against required fields and property types, retries once correctively, and returns a `valid` flag. That is 6 more credits.
 
 ## 2. Pass the document
 
 Every tool above takes exactly ONE of these input forms:
 
-- `fileUrl` — a public URL to the PDF or image
-- `text` — raw text, if the content is already in the conversation
-- `fileBase64` + `fileMimeType` — for local files: read the file, base64-encode it, and pass both fields (`fileMimeType` must be right, e.g. `application/pdf`, `image/png`, `image/jpeg`)
+- `fileUrl`, a public URL to the PDF or image
+- `text`, raw text if the content is already in the conversation
+- `fileBase64` plus `fileMimeType`, for local files: read the file, base64-encode it, and pass both fields. `fileMimeType` has to be right, for example `application/pdf`, `image/png`, `image/jpeg`.
 
 For a local file, encode it in one step:
 
@@ -34,12 +37,16 @@ For a local file, encode it in one step:
 base64 -i path/to/invoice.pdf
 ```
 
-Do not pass a local filesystem path as `fileUrl` — it must be publicly reachable.
+Do not pass a local filesystem path as `fileUrl`. That field has to be publicly reachable. Passing none of the three forms returns `Provide one of: fileUrl, text, or fileBase64 + fileMimeType.`
 
 ## 3. What comes back
 
-Each tool returns schema-validated JSON for its document type — the API validates the extraction against the endpoint's schema before returning it, so fields are typed and consistent across calls. Present the parts the user asked for; offer the full JSON if they want to pipe it somewhere.
+Each tool returns schema-validated JSON for its document type. The API validates the extraction against the endpoint's schema before returning it, so fields are typed and consistent across calls. Alongside the result comes `usage: { credits, balanceRemaining }`.
+
+Present the parts the user asked for. Offer the full JSON if they want to pipe it somewhere.
 
 ## Billing
 
-Calls debit the account's credit wallet **only on success** — a failed call (bad input, timeout, server error) costs nothing, so it is safe to retry. Indicative costs: invoice 8 credits, receipt 6, statement 12, tables 8, parse 10, split 10 (1 credit = $0.01). If a call fails with `402 insufficient_credits`, the wallet is empty — the user can top up at https://api.kynth.studio or wait for the monthly 500-credit refresh.
+Calls debit the account credit wallet only on success. A failed call (bad input, timeout, server error) costs nothing, so a retry is safe. 1 credit = $0.01; the per-tool rates are in the table above.
+
+There is no free tier. A wallet starts at zero and is topped up by a credit pack or a monthly plan bought at https://api.kynth.studio. A call that the wallet cannot cover returns `402 insufficient_credits` before any model runs, so it costs nothing and answers immediately.
